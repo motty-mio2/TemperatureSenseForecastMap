@@ -21,3 +21,8 @@
 ### 環境変数の設定
 1. `.evb.base` ファイルを**コピー**して， `.env`ファイルを作成する
 2. `.env`ファイル内のトークンを置き換える
+
+### dbの初期設定
+`python manage.py makemigrations`
+`python manage.py migrate`
+`\COPY app_point_name(name,katakana,address,ido,keido,wbgt_time_json) FROM 'ame_master_202207029.csv' DELIMITER ',' CSV HEADER;`
