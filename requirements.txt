@@ -12,7 +12,7 @@ idna
 matplotlib
 numpy
 pip
-psycopg2
+psycopg2-binary
 python-dateutil
 python-dotenv
 requests
