@@ -15,3 +15,4 @@ USER dev
 # CMD ["bash"]
 ENTRYPOINT ["python"]
 CMD ["manage.py", "runserver", "0:8000"]
+
