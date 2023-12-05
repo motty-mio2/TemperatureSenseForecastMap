@@ -10,7 +10,7 @@ from django.contrib.auth import login, logout
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import redirect, render  # type:ignore
-from django.urls import reverse
+from django.urls import reverse  # type:ignore
 from django.views.generic import TemplateView
 
 from . import db2geojson, geo_apis, wbgt_util
@@ -223,38 +223,6 @@ class UserPage(TemplateView):
         return self._generate_common_context()
 
 
-class SetLocationName(TemplateView):
-    template_name: str = "app/locationname.html"
-
-    def post(self, request: HttpRequest) -> Any:
-        if "save" in request.POST:
-            self.do_save(
-                name=request.POST.get("location_name"),  # type: ignore
-                ido=request.POST.get("ido"),  # type: ignore
-                keido=request.POST.get("keido"),  # type: ignore
-                uid=request.user.id,  # type: ignore
-            )
-
-            ret = redirect(f"{self.request._current_scheme_host}/user/")  # type: ignore
-            return ret
-        else:
-            ret = render(
-                request=request,
-                template_name="app/locationname.html",
-                context={
-                    "ido": request.POST.get("ido"),
-                    "keido": request.POST.get("keido"),
-                    "link": f"{self.request._current_scheme_host}/user/",  # type:ignore
-                },
-            )
-            return ret
-
-    def get_context_data(self, **kwargs):  # type:ignore
-        context = super().get_context_data(**kwargs)
-
-        return context
-
-
 class Signup(TemplateView):
     template_name: str = "app/user_admin/signup.html"
 
@@ -316,11 +284,13 @@ class HeatMap_view(TemplateView):
         db2geojson.data2geojson()
 
         now_hour: int = datetime.now(timezone(timedelta(hours=9), "JST")).hour
+        now_day: int = datetime.now(timezone(timedelta(hours=9), "JST")).day
 
         param = {
             "MAPBOX_TOKEN": os.getenv("MAPBOX_TOKEN"),
+            "now_day": now_day,
             "now_hour": now_hour,
-            "time_label": f"{now_hour}時",
+            "time_label": f"{now_day}日 {now_hour}時",
         }
 
         return render(request, "app/HeatMap.html", param)
